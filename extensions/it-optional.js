@@ -3,7 +3,6 @@
 exports = module.exports = testOptional;
 
 function testOptional(title, fn) {
-    
     it(title, function() {
         try {
            fn.call(this);

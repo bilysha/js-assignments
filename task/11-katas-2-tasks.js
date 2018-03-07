@@ -34,7 +34,43 @@
  *
  */
 function parseBankAccount(bankAccount) {
-    throw new Error('Not implemented');
+    bankAccount = bankAccount.replace( /\n/g, "" );
+
+    const numbers = [' _ | ||_|',
+                    '     |  |', 
+                    ' _  _||_ ', 
+                    ' _  _| _|', 
+                    '   |_|  |', 
+                    ' _ |_  _|', 
+                    ' _ |_ |_|', 
+                    ' _   |  |', 
+                    ' _ |_||_|', 
+                    ' _ |_| _|'
+                ];
+
+
+    let arr = ['','','','','','','','',''];
+    let num = 0;
+
+    for(let i = 1 ; i <= bankAccount.length ; i++) {
+        arr[num] += bankAccount[i-1];
+        if( i % 3 === 0 ) {
+            num++
+        }
+        if( i % 27 === 0) {
+            num = 0;
+        }
+    }
+
+    for(let i = 0 ; i < arr.length; i++) {
+        for(let j = 0 ; j < numbers.length; j++) {
+            if( arr[i] === numbers[j]) {
+                arr[i] = j;
+            }
+        }
+    }
+
+    return +arr.join('');
 }
 
 
@@ -62,7 +98,7 @@ function parseBankAccount(bankAccount) {
  *                                                                                                'sequence of',
  *                                                                                                'characters.'
  */
-function* wrapText(text, columns) {
+function wrapText(text, columns) {
     throw new Error('Not implemented');
 }
 
