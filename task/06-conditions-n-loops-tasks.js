@@ -122,8 +122,13 @@ function isTriangle(a,b,c) {
  *   { top:20, left:20, width: 20, height: 20 }    =>  false
  *  
  */
-function doRectanglesOverlap(rect1, rect2) {
-    throw new Error('Not implemented');
+function doRectanglesOverlap(a, b) {
+    var s1 = ( a.top >= b.top && a.top <= b.top + b.width ) || ( a.top + a.width >= b.top && a.top + a.width <= b.top + b.width ),
+        s2 = ( a.left >= b.left && a.left <= b.left + b.height )||( a.left + a.height >= b.left && a.left + a.height <= b.left + b.height ),
+        s3 = ( b.top >= a.top && b.top <= a.top + a.width )||( b.top + b.width >= a.top && b.top + b.width <= a.top + a.width ),
+        s4 = ( b.left >= a.left && b.left <= a.left + a.height )||( b.left + b.height >= a.left && b.left + b.height <= a.left + a.height );
+
+return ((s1 && s2) || (s3 && s4)) || ((s1 && s4) || (s3 && s2));
 }
 
 
@@ -211,7 +216,19 @@ function findFirstSingleChar(str) {
  *
  */
 function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
-    throw new Error('Not implemented');
+    var openBracket = '';
+    var closeBracket = '';
+
+    if(b < a) {
+        var temp = a;
+        a = b;
+        b = temp;
+    }
+
+    isStartIncluded ? openBracket = '[' : openBracket = '(';
+    isEndIncluded ? closeBracket = ']' : closeBracket = ')';
+
+    return openBracket + a + ', ' + b + closeBracket; 
 }
 
 
@@ -270,7 +287,23 @@ function reverseInteger(num) {
  *   4916123456789012 => false
  */
 function isCreditCardNumber(ccn) {
-    throw new Error('Not implemented');
+    ccn = ccn.toString();
+    var sum = 0, check = 0, j = 1;
+    for(var i = ccn.length - 1; i >= 0; i--, j++) {
+        if(j % 2 === 0) {
+            check = ccn[i]*2
+            if(check > 9) {
+                sum += check - 9;
+            }
+            else {
+                sum += check;
+            }
+        }
+        else {
+            sum += +ccn[i];
+        }
+    }
+    return sum % 10 === 0
 }
 
 
@@ -336,42 +369,6 @@ function isBracketsBalanced(str) {
 
 
 /**
- * Returns the human readable string of time period specified by the start and end time.
- * The result string should be constrcuted using the folliwing rules:
- *
- * ---------------------------------------------------------------------
- *   Difference                 |  Result
- * ---------------------------------------------------------------------
- *    0 to 45 seconds           |  a few seconds ago
- *   45 to 90 seconds           |  a minute ago
- *   90 seconds to 45 minutes   |  2 minutes ago ... 45 minutes ago
- *   45 to 90 minutes           |  an hour ago
- *  90 minutes to 22 hours      |  2 hours ago ... 22 hours ago
- *  22 to 36 hours              |  a day ago
- *  36 hours to 25 days         |  2 days ago ... 25 days ago
- *  25 to 45 days               |  a month ago
- *  45 to 345 days              |  2 months ago ... 11 months ago
- *  345 to 545 days (1.5 years) |  a year ago
- *  546 days+                   |  2 years ago ... 20 years ago
- * ---------------------------------------------------------------------
- *
- * @param {Date} startDate
- * @param {Date} endDate
- * @return {string}
- *
- * @example
- *   Date('2000-01-01 01:00:00.100'), Date('2000-01-01 01:00:00.200')  => 'a few seconds ago'
- *   Date('2000-01-01 01:00:00.100'), Date('2000-01-01 01:00:05.000')  => '5 minutes ago'
- *   Date('2000-01-01 01:00:00.100'), Date('2000-01-02 03:00:05.000')  => 'a day ago'
- *   Date('2000-01-01 01:00:00.100'), Date('2015-01-02 03:00:05.000')  => '15 years ago'
- *
- */
-function timespanToHumanString(startDate, endDate) {
-    throw new Error('Not implemented');
-}
-
-
-/**
  * Returns the string with n-ary (binary, ternary, etc, where n<=10) representation of specified number.
  * See more about
  * https://en.wikipedia.org/wiki/Binary_number
@@ -383,7 +380,7 @@ function timespanToHumanString(startDate, endDate) {
  * @return {string}
  *
  * @example:
- *   1024, 2  => '10000000000'
+ *   1024, 2  => '1 0 0 0 0 0 0 0 0 0 0'
  *   6561, 3  => '100000000'
  *    365, 2  => '101101101'
  *    365, 3  => '111112'
@@ -391,7 +388,15 @@ function timespanToHumanString(startDate, endDate) {
  *    365, 10 => '365'
  */
 function toNaryString(num, n) {
-    throw new Error('Not implemented');
+    var ans = '';
+    var o = 0;
+    while(num >= n) {
+        o = num % n;
+        ans += o;
+        num = Math.floor(num / n);
+    }
+    ans += num;
+    return ans.split('').reverse().join('');
 }
 
 
@@ -436,6 +441,42 @@ function getMatrixProduct(m1, m2) {
 
 
 /**
+ * Returns the human readable string of time period specified by the start and end time.
+ * The result string should be constrcuted using the folliwing rules:
+ *
+ * ---------------------------------------------------------------------
+ *   Difference                 |  Result
+ * ---------------------------------------------------------------------
+ *    0 to 45 seconds           |  a few seconds ago
+ *   45 to 90 seconds           |  a minute ago
+ *   90 seconds to 45 minutes   |  2 minutes ago ... 45 minutes ago
+ *   45 to 90 minutes           |  an hour ago
+ *  90 minutes to 22 hours      |  2 hours ago ... 22 hours ago
+ *  22 to 36 hours              |  a day ago
+ *  36 hours to 25 days         |  2 days ago ... 25 days ago
+ *  25 to 45 days               |  a month ago
+ *  45 to 345 days              |  2 months ago ... 11 months ago
+ *  345 to 545 days (1.5 years) |  a year ago
+ *  546 days+                   |  2 years ago ... 20 years ago
+ * ---------------------------------------------------------------------
+ *
+ * @param {Date} startDate
+ * @param {Date} endDate
+ * @return {string}
+ *
+ * @example
+ *   Date('2000-01-01 01:00:00.100'), Date('2000-01-01 01:00:00.200')  => 'a few seconds ago'
+ *   Date('2000-01-01 01:00:00.100'), Date('2000-01-01 01:00:05.000')  => '5 minutes ago'
+ *   Date('2000-01-01 01:00:00.100'), Date('2000-01-02 03:00:05.000')  => 'a day ago'
+ *   Date('2000-01-01 01:00:00.100'), Date('2015-01-02 03:00:05.000')  => '15 years ago'
+ *
+ */
+function timespanToHumanString(startDate, endDate) {
+    throw new Error('Not implemented');
+}
+
+
+/**
  * Returns the evaluation of the specified tic-tac-toe position.
  * See the details: https://en.wikipedia.org/wiki/Tic-tac-toe
  *
@@ -466,7 +507,25 @@ function getMatrixProduct(m1, m2) {
  *
  */
 function evaluateTicTacToePosition(position) {
-    throw new Error('Not implemented');
+    if(position[0][0] === position[1][1] && position[0][0] === position[2][2] && position[1][1]=== position[2][2] && position[0][0] !== undefined) {
+        return position[0][0];
+    }
+    if(position[0][2] === position[1][1] && position[1][1] === position[2][0] && position[0][2] === position[2][0] && position[0][2] !== undefined) {
+        return position[0][2];
+    }
+    for(var i = 0 ; i < 3 ; i++) {
+        if(position[i][0] === position[i][1] && position[i][1] === position[i][2] && position[i][0] === position[i][2] && position[i][0] !== undefined) {
+            return position[i][0];
+        }
+    }
+
+    for(var i = 0 ; i < 3 ; i++) {
+        if(position[0][i] === position[1][i] && position[1][i] === position[2][i] &&position[0][i] === position[2][i] && position[0][i] !== undefined) {
+            return position[0][i];
+        }
+    }
+
+    return undefined;
 }
 
 

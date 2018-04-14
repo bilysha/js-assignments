@@ -58,7 +58,9 @@ function getJSON(obj) {
  *
  */
 function fromJSON(proto, json) {
+    //return Object.assign(Object.create(proto), JSON.parse(json));
     throw new Error('Not implemented');
+ 
 }
 
 
